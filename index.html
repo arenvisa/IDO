@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2026 by anonymous (http://jsbin.com/miquvagaqo/1/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рабочий стол делопроизводителя • Приём граждан + Викторина</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(145deg, #1a2639 0%, #0d1b2a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            margin: 0;
+        }
+
+        .desk {
+            max-width: 950px;
+            width: 100%;
+            background: #f2e9db;
+            border-radius: 3rem 3rem 2rem 2rem;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.6), inset 0 2px 8px rgba(255, 255, 255, 0.6);
+            padding: 2rem 2rem 1.8rem;
+            position: relative;
+            border-bottom: 6px solid #b89b7b;
+        }
+
+        .desk-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.8rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #2d3e50;
+            letter-spacing: 0.5px;
+            background: rgba(255, 248, 235, 0.8);
+            padding: 0.4rem 1.2rem;
+            border-radius: 3rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: #e6d7bd;
+            padding: 0.4rem;
+            border-radius: 2.5rem;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-tab {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 1.4rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #3a3228;
+            cursor: pointer;
+            transition: 0.2s;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .nav-tab.active-tab {
+            background: #2f4858;
+            color: #f3e3c9;
+            box-shadow: 0 0 10px #4f7a8f;
+        }
+
+        .stats {
+            display: flex;
+            gap: 1.2rem;
+            background: #e6d7bd;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .timer-block {
+            background: #283845;
+            color: #f4d58d;
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .document-card {
+            background: #fffef7;
+            border: 2px solid #c0b19c;
+            border-radius: 2rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 6px 8px 0 rgba(0, 0, 0, 0.08);
+            transition: 0.25s;
+        }
+
+        .appeal-text {
+            font-size: 1.25rem;
+            line-height: 1.5;
+            color: #241e1a;
+            margin-bottom: 1.8rem;
+            font-weight: 500;
+            background: #faf5e9;
+            padding: 1rem 1.4rem;
+            border-radius: 1.2rem;
+            border-left: 6px solid #b68b5c;
+        }
+
+        .action-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            align-items: flex-end;
+        }
+
+        .type-selector {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            flex: 2;
+            min-width: 240px;
+        }
+
+        .type-btn,
+        .quiz-option-btn {
+            background: #e7dfcf;
+            border: 2px solid #9b8c7a;
+            border-radius: 2.5rem;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            color: #3a3228;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            letter-spacing: 0.4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .type-btn.active-type {
+            background: #2f4858;
+            border-color: #1f363d;
+            color: #f3e3c9;
+            box-shadow: 0 0 12px #4f7a8f;
+        }
+
+        .quiz-option-btn.correct-answer {
+            background: #2d5a27;
+            border-color: #1e3e1a;
+            color: #f7f3e4;
+            box-shadow: 0 0 12px #5b8c4e;
+        }
+
+        .quiz-option-btn.wrong-answer {
+            background: #a13333;
+            border-color: #6e1e1e;
+            color: #f7f3e4;
+            box-shadow: 0 0 12px #c44;
+        }
+
+        .decision-btns {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .decision-btn {
+            background: #d4c3a3;
+            border: none;
+            border-radius: 2.5rem;
+            padding: 0.7rem 1.6rem;
+            font-weight: 700;
+            background: #3a4e3f;
+            color: #f7f3e4;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.95rem;
+            border-bottom: 3px solid #1e2e22;
+        }
+
+        .decision-btn:hover {
+            background: #4d684b;
+        }
+
+        .decision-btn:active {
+            transform: translateY(2px);
+            border-bottom-width: 1px;
+        }
+
+        .queue-hint {
+            margin-top: 1.2rem;
+            font-style: italic;
+            color: #4b3b2c;
+            background: #f6eedb;
+            border-radius: 2rem;
+            padding: 0.5rem 1.2rem;
+            display: inline-block;
+            font-weight: 500;
+        }
+
+        .feedback-message {
+            margin-top: 1rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 1.5rem;
+            background: #fff7e6;
+        }
+
+        .restart-btn {
+            background: none;
+            border: 2px dashed #8b7355;
+            color: #4a3929;
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .restart-btn:hover {
+            background: #dac29c;
+        }
+
+        /* Справочник */
+        .law-reference {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .law-card {
+            background: #fffef7;
+            border: 2px solid #c0b19c;
+            border-radius: 1.8rem;
+            padding: 1.5rem 1.8rem;
+            box-shadow: 4px 6px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .law-card h3 {
+            font-size: 1.4rem;
+            color: #2d3e50;
+            margin-bottom: 0.8rem;
+            border-left: 8px solid #b68b5c;
+            padding-left: 1rem;
+            font-weight: 700;
+        }
+
+        .law-card p,
+        .law-card li {
+            color: #3b362f;
+            line-height: 1.6;
+            margin-bottom: 0.6rem;
+        }
+
+        .law-card ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .law-card ul li::before {
+            content: "📜 ";
+        }
+
+        .law-highlight {
+            background: #faf5e9;
+            padding: 0.8rem 1.2rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            color: #4b3b2c;
+            margin-top: 0.8rem;
+            display: inline-block;
+        }
+
+        /* Викторина */
+        .quiz-question {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #241e1a;
+            margin-bottom: 1.5rem;
+            background: #faf5e9;
+            padding: 1rem 1.4rem;
+            border-radius: 1.2rem;
+            border-left: 6px solid #b68b5c;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 0.8rem 1.2rem;
+            font-size: 1rem;
+        }
+
+        .quiz-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .hidden-section {
+            display: none;
+        }
+
+        @media (max-width: 550px) {
+            .desk {
+                padding: 1.5rem;
+            }
+            .nav-tab {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="desk">
+        <div class="desk-header">
+            <div class="logo">📋 Документационное обеспечение</div>
+            <div class="nav-tabs" id="navTabs">
+                <button class="nav-tab active-tab" data-tab="game">🏛️ Приёмная</button>
+                <button class="nav-tab" data-tab="law">📖 Справочник 59-ФЗ</button>
+                <button class="nav-tab" data-tab="quiz">🎓 Викторина</button>
+            </div>
+            <div class="stats" id="statsPanel">
+                <span>✅ <span id="scoreDisplay">0</span></span>
+                <span class="timer-block">⏳ <span id="timerDisplay">30</span>с</span>
+            </div>
+            <button class="restart-btn" id="restartButton">🔄 Новый день</button>
+        </div>
+
+        <!-- Игровой раздел (Приёмная) -->
+        <div id="gameActiveArea">
+            <div class="document-card">
+                <div class="appeal-text" id="appealText">Загрузка обращения...</div>
+                <div class="action-panel">
+                    <div class="type-selector" id="typeSelector">
+                        <button class="type-btn" data-type="proposal">💡 Предложение</button>
+                        <button class="type-btn" data-type="application">📄 Заявление</button>
+                        <button class="type-btn" data-type="complaint">⚠️ Жалоба</button>
+                    </div>
+                    <div class="decision-btns" id="decisionButtons">
+                        <button class="decision-btn" data-action="register">📥 Зарегистрировать</button>
+                        <button class="decision-btn" data-action="return">↩️ Вернуть (доработка)</button>
+                        <button class="decision-btn" data-action="forward">📤 Переслать по компетенции</button>
+                    </div>
+                </div>
+                <div id="feedbackArea" class="feedback-message"></div>
+                <div class="queue-hint" id="queueHint">📨 Осталось обращений: --</div>
+            </div>
+        </div>
+
+        <!-- Справочный раздел по 59-ФЗ -->
+        <div id="lawReferenceArea" class="hidden-section law-reference">
+            <div class="law-card">
+                <h3>📌 Основные виды обращений (ст. 4)</h3>
+                <ul>
+                    <li><strong>Предложение</strong> — рекомендация по совершенствованию законов, деятельности органов или решению социально‑экономических задач.</li>
+                    <li><strong>Заявление</strong> — просьба о содействии в реализации прав и свобод, либо сообщение о нарушении законов.</li>
+                    <li><strong>Жалоба</strong> — просьба о восстановлении нарушенных прав, свобод или законных интересов.</li>
+                </ul>
+                <div class="law-highlight">💡 Правильное определение вида обращения — первый шаг к верной регистрации.</div>
+            </div>
+            <div class="law-card">
+                <h3>⏱️ Сроки рассмотрения (ст. 12)</h3>
+                <p>По общему правилу письменное обращение рассматривается в течение <strong>30 дней</strong> со дня регистрации.</p>
+                <p>В исключительных случаях срок может быть продлён, но не более чем на 30 дней, с обязательным уведомлением заявителя.</p>
+                <p>Обращения, не относящиеся к компетенции органа, пересылаются в течение <strong>7 дней</strong> с уведомлением гражданина.</p>
+            </div>
+            <div class="law-card">
+                <h3>📬 Порядок направления и регистрации (ст. 8)</h3>
+                <p>Гражданин направляет обращение в тот орган или должностному лицу, в чью компетенцию входит решение вопроса.</p>
+                <p>Запрещается направлять жалобу на рассмотрение тому лицу, чьи действия обжалуются.</p>
+                <p>Обращение, поступившее в орган, подлежит обязательной регистрации в течение трёх дней.</p>
+            </div>
+            <div class="law-card">
+                <h3>🚫 Когда ответ не даётся (ст. 11)</h3>
+                <ul>
+                    <li>В обращении не указаны фамилия и адрес для ответа.</li>
+                    <li>Текст не поддаётся прочтению.</li>
+                    <li>Содержатся нецензурные или оскорбительные выражения.</li>
+                    <li>Повторное обращение по тому же вопросу, если ранее давался ответ по существу.</li>
+                </ul>
+                <div class="law-highlight">⚠️ В таких случаях обращение может быть оставлено без ответа или возвращено заявителю.</div>
+            </div>
+            <div class="law-card">
+                <h3>📋 Права гражданина при рассмотрении обращения (ст. 5)</h3>
+                <ul>
+                    <li>Представлять дополнительные документы и материалы.</li>
+                    <li>Знакомиться с материалами проверки, если это не затрагивает чужие права.</li>
+                    <li>Получать письменный ответ по существу поставленных вопросов.</li>
+                    <li>Обжаловать принятое решение в вышестоящий орган или в суд.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Викторина -->
+        <div id="quizArea" class="hidden-section">
+            <div class="document-card">
+                <div class="quiz-question" id="quizQuestion">Вопрос загружается...</div>
+                <div class="quiz-options" id="quizOptions"></div>
+                <div id="quizFeedback" class="feedback-message"></div>
+                <div class="quiz-stats">
+                    <span>✅ <span id="quizScoreDisplay">0</span> / <span id="quizTotalDisplay">0</span></span>
+                    <span class="timer-block">⏳ <span id="quizTimerDisplay">15</span>с</span>
+                </div>
+                <button class="restart-btn" id="quizRestartButton" style="display: none; margin-top: 1rem;">🔄 Пройти заново</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ----- БАЗА СИТУАЦИЙ (игра-приёмная) -----
+            const situations = [
+                { text: "Гражданин Петров просит установить светофор на перекрёстке ул. Мира и ул. Ленина, описывая высокую аварийность.", correctType: "proposal", correctAction: "register", explanation: "Это предложение по улучшению дорожной обстановки (ст.4 59-ФЗ). Регистрируем и направляем в дорожный отдел." },
+                { text: "Иванова подаёт заявление о выдаче справки о составе семьи для оформления субсидии.", correctType: "application", correctAction: "register", explanation: "Заявление о предоставлении информации/документа. Регистрируется, ответ готовится в течение 30 дней (59-ФЗ)." },
+                { text: "Сидоров жалуется на бездействие управляющей компании: протечки крыши не устраняют 2 месяца.", correctType: "complaint", correctAction: "register", explanation: "Жалоба на нарушение прав. Регистрируем, направляем в жилищный надзор или УК, срок ответа – 30 дней." },
+                { text: "Обращение без подписи и без обратного адреса, текст содержит общие рассуждения о политике.", correctType: "proposal", correctAction: "return", explanation: "Анонимное обращение без контактных данных. Согласно 59-ФЗ ответ не даётся, можно вернуть/списать в дело." },
+                { text: "Гражданин просит разъяснить порядок получения льготной пенсии, но вопрос относится к Пенсионному фонду.", correctType: "application", correctAction: "forward", explanation: "Заявление не по компетенции. В 7-дневный срок пересылаем в ПФР с уведомлением заявителя (ч.3 ст.8 59-ФЗ)." },
+                { text: "Жительница сообщает о регулярных перебоях с электричеством и просит принять меры.", correctType: "complaint", correctAction: "register", explanation: "Жалоба на качество коммунальной услуги. Подлежит регистрации и рассмотрению." },
+                { text: "Обращение содержит нецензурную лексику и угрозы в адрес сотрудников администрации.", correctType: "complaint", correctAction: "return", explanation: "Обращение с оскорблениями – орган вправе оставить без ответа по существу (ст.11 59-ФЗ), возвращаем." },
+                { text: "Предприниматель предлагает организовать ярмарку выходного дня на центральной площади.", correctType: "proposal", correctAction: "register", explanation: "Предложение по развитию территории. Регистрируем и направляем в отдел торговли." },
+                { text: "Гражданин запрашивает копию постановления администрации за прошлый год, касающегося земельного участка.", correctType: "application", correctAction: "register", explanation: "Заявление о предоставлении документа. Рассматривается в общем порядке (30 дней)." },
+                { text: "Коллективная жалоба жильцов на шум от стройки в ночное время.", correctType: "complaint", correctAction: "register", explanation: "Коллективное обращение, жалоба. Регистрируется, срок ответа – 30 дней." }
+            ];
+
+            // ----- СОСТОЯНИЕ ИГРЫ ПРИЁМНАЯ -----
+            let currentQueue = [];
+            let currentIndex = 0;
+            let score = 0;
+            let timer = 30;
+            let timerInterval = null;
+            let selectedType = null;
+            let gameActive = true;
+            let currentSituation = null;
+
+            // ----- СОСТОЯНИЕ ВИКТОРИНЫ -----
+            const quizQuestionsData = [
+                { question: "В течение какого срока по общему правилу рассматривается письменное обращение гражданина?", options: ["15 дней", "30 дней", "45 дней", "7 дней"], correct: 1, explanation: "ст. 12 59-ФЗ – 30 дней со дня регистрации." },
+                { question: "Какой вид обращения предполагает просьбу о восстановлении нарушенных прав?", options: ["Предложение", "Заявление", "Жалоба", "Ходатайство"], correct: 2, explanation: "ст. 4: Жалоба – просьба о восстановлении нарушенных прав." },
+                { question: "Что происходит, если в обращении не указаны фамилия и адрес для ответа?", options: ["Автоматически регистрируется", "Ответ даётся в общем порядке", "Ответ не даётся", "Направляется в прокуратуру"], correct: 2, explanation: "ст. 11 – ответ не даётся." },
+                { question: "В какой срок орган должен переслать обращение не по компетенции?", options: ["3 дня", "7 дней", "10 дней", "30 дней"], correct: 1, explanation: "ч.3 ст.8 – в течение 7 дней со дня регистрации." },
+                { question: "Можно ли направить жалобу должностному лицу, чьи действия обжалуются?", options: ["Да, всегда", "Нет, запрещено", "Можно с согласия заявителя", "Только в вышестоящий орган"], correct: 1, explanation: "ч.6 ст.8 – запрещается." },
+                { question: "Какое право есть у гражданина при рассмотрении его обращения?", options: ["Требовать увольнения чиновника", "Знакомиться с материалами проверки", "Получать компенсацию автоматически", "Присутствовать на любом совещании"], correct: 1, explanation: "ст.5 – знакомиться с документами, если не нарушаются чужие права." },
+                { question: "Что из перечисленного является основанием для оставления обращения без ответа?", options: ["Неразборчивый почерк", "Отсутствие печати", "Нецензурные выражения", "Обращение от юридического лица"], correct: 2, explanation: "ст.11 – нецензурная лексика позволяет оставить без ответа." },
+                { question: "Рекомендация по улучшению работы органа власти – это:", options: ["Заявление", "Жалоба", "Предложение", "Петиция"], correct: 2, explanation: "ст.4 – предложение." },
+                { question: "Какой максимальный срок продления рассмотрения обращения?", options: ["15 дней", "30 дней", "45 дней", "60 дней"], correct: 1, explanation: "ст.12 – не более чем на 30 дней, с уведомлением." },
+                { question: "Обязан ли орган регистрировать поступившее обращение?", options: ["Да, в течение 3 дней", "Нет, по желанию", "Только жалобы", "Если есть подпись"], correct: 0, explanation: "ч.2 ст.8 – обязательная регистрация в течение трёх дней." }
+            ];
+
+            let quizQuestions = [];
+            let quizIndex = 0;
+            let quizScore = 0;
+            let quizTimer = 15;
+            let quizTimerInterval = null;
+            let quizActive = false;
+            let quizCompleted = false;
+
+            // ----- DOM элементы -----
+            const appealTextEl = document.getElementById('appealText');
+            const typeButtons = document.querySelectorAll('.type-btn');
+            const decisionButtons = document.querySelectorAll('.decision-btn');
+            const feedbackEl = document.getElementById('feedbackArea');
+            const queueHintEl = document.getElementById('queueHint');
+            const scoreDisplayEl = document.getElementById('scoreDisplay');
+            const timerDisplayEl = document.getElementById('timerDisplay');
+            const restartBtn = document.getElementById('restartButton');
+            const gameArea = document.getElementById('gameActiveArea');
+            const lawArea = document.getElementById('lawReferenceArea');
+            const quizArea = document.getElementById('quizArea');
+            const navTabs = document.querySelectorAll('.nav-tab');
+            const statsPanel = document.getElementById('statsPanel');
+
+            const quizQuestionEl = document.getElementById('quizQuestion');
+            const quizOptionsEl = document.getElementById('quizOptions');
+            const quizFeedbackEl = document.getElementById('quizFeedback');
+            const quizScoreDisplayEl = document.getElementById('quizScoreDisplay');
+            const quizTotalDisplayEl = document.getElementById('quizTotalDisplay');
+            const quizTimerDisplayEl = document.getElementById('quizTimerDisplay');
+            const quizRestartBtn = document.getElementById('quizRestartButton');
+
+            // ----- ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК -----
+            function stopAllTimers() {
+                stopTimer();          // игра приёмная
+                stopQuizTimer();      // викторина
+            }
+
+            function switchTab(tabId) {
+                navTabs.forEach(tab => tab.classList.remove('active-tab'));
+                const activeTab = document.querySelector(`.nav-tab[data-tab="${tabId}"]`);
+                if (activeTab) activeTab.classList.add('active-tab');
+
+                // Скрываем все разделы
+                gameArea.classList.add('hidden-section');
+                lawArea.classList.add('hidden-section');
+                quizArea.classList.add('hidden-section');
+
+                // Остановка таймеров
+                stopAllTimers();
+
+                if (tabId === 'game') {
+                    gameArea.classList.remove('hidden-section');
+                    statsPanel.style.display = 'flex';
+                    restartBtn.style.display = 'inline-block';
+                    // Если игра завершена, перезапускаем
+                    if (!gameActive && currentIndex >= currentQueue.length) {
+                        resetGame();
+                    } else if (gameActive) {
+                        // продолжить с текущим таймером
+                        startTimer();
+                    }
+                } else if (tabId === 'law') {
+                    lawArea.classList.remove('hidden-section');
+                    statsPanel.style.display = 'none';
+                    restartBtn.style.display = 'none';
+                } else if (tabId === 'quiz') {
+                    quizArea.classList.remove('hidden-section');
+                    statsPanel.style.display = 'none';
+                    restartBtn.style.display = 'none';
+                    // Инициализация или продолжение викторины
+                    if (!quizActive && !quizCompleted) {
+                        startQuiz();
+                    } else if (quizActive && !quizCompleted) {
+                        // продолжаем с текущего вопроса, запускаем таймер
+                        loadQuizQuestion();
+                        startQuizTimer();
+                    } else if (quizCompleted) {
+                        showQuizResult();
+                    }
+                }
+            }
+
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchTab(tab.dataset.tab);
+                });
+            });
+
+            // ----- УТИЛИТЫ ИГРЫ (приёмная) -----
+            function shuffleArray(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+
+            function resetSelection() {
+                selectedType = null;
+                typeButtons.forEach(btn => btn.classList.remove('active-type'));
+            }
+
+            function stopTimer() {
+                if (timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+            }
+
+            function disableControls(disabled = true) {
+                typeButtons.forEach(b => b.disabled = disabled);
+                decisionButtons.forEach(b => b.disabled = disabled);
+            }
+
+            function showFeedback(msg, isGood = true) {
+                feedbackEl.innerHTML = msg;
+                feedbackEl.style.color = isGood ? '#2d5a27' : '#a13333';
+                feedbackEl.style.background = isGood ? '#e3f0da' : '#ffe0e0';
+            }
+
+            function updateUIStats() {
+                scoreDisplayEl.textContent = score;
+                const left = currentQueue.length - currentIndex;
+                queueHintEl.innerHTML = `📨 Осталось обращений: ${left > 0 ? left : 0}`;
+                timerDisplayEl.textContent = timer;
+            }
+
+            function loadSituation() {
+                if (!gameActive) return;
+                if (currentIndex >= currentQueue.length) {
+                    endGame('win');
+                    return;
+                }
+                currentSituation = currentQueue[currentIndex];
+                appealTextEl.textContent = currentSituation.text;
+                resetSelection();
+                disableControls(false);
+                feedbackEl.innerHTML = '';
+                timer = 30;
+                updateUIStats();
+                startTimer();
+            }
+
+            function startTimer() {
+                stopTimer();
+                timerInterval = setInterval(() => {
+                    timer--;
+                    timerDisplayEl.textContent = timer;
+                    if (timer <= 0) {
+                        stopTimer();
+                        handleTimeout();
+                    }
+                }, 1000);
+            }
+
+            function handleTimeout() {
+                if (!gameActive || !currentSituation) return;
+                disableControls(true);
+                showFeedback('⏰ Время вышло! Обращение не обработано. Штраф.', false);
+                score = Math.max(0, score - 1);
+                updateUIStats();
+                moveToNextAfterDelay();
+            }
+
+            function moveToNextAfterDelay() {
+                stopTimer();
+                setTimeout(() => {
+                    if (!gameActive) return;
+                    currentIndex++;
+                    loadSituation();
+                }, 1800);
+            }
+
+            function endGame(reason) {
+                gameActive = false;
+                stopTimer();
+                disableControls(true);
+                appealTextEl.textContent = reason === 'win' ? '🎉 Рабочий день завершён! Все обращения обработаны.' : 'Игра окончена.';
+                feedbackEl.innerHTML = `🏆 Итоговый профессионализм: ${score} баллов.`;
+                queueHintEl.innerHTML = '📋 Приём закрыт.';
+            }
+
+            function processDecision(action) {
+                if (!gameActive || !currentSituation || timer <= 0) return;
+                stopTimer();
+                disableControls(true);
+
+                const correctType = currentSituation.correctType;
+                const correctAction = currentSituation.correctAction;
+
+                if (!selectedType) {
+                    showFeedback('❗ Сначала выберите вид обращения (предложение/заявление/жалоба).', false);
+                    disableControls(false);
+                    startTimer();
+                    return;
+                }
+
+                const typeCorrect = (selectedType === correctType);
+                const actionCorrect = (action === correctAction);
+                const allCorrect = typeCorrect && actionCorrect;
+
+                let explanation = currentSituation.explanation || '';
+                if (allCorrect) {
+                    score += 2;
+                    showFeedback(`✅ Верно! ${explanation} +2 балла`, true);
+                } else {
+                    let msg = '❌ Ошибка: ';
+                    if (!typeCorrect) msg += `вид должен быть "${translateType(correctType)}". `;
+                    if (!actionCorrect) msg += `действие должно быть "${translateAction(correctAction)}". `;
+                    msg += explanation;
+                    showFeedback(msg, false);
+                    score = Math.max(0, score - 1);
+                }
+                updateUIStats();
+                moveToNextAfterDelay();
+            }
+
+            function translateType(t) {
+                return { proposal: 'Предложение', application: 'Заявление', complaint: 'Жалоба' }[t] || t;
+            }
+            function translateAction(a) {
+                return { register: 'Зарегистрировать', return: 'Вернуть на доработку', forward: 'Переслать по компетенции' }[a] || a;
+            }
+
+            function resetGame() {
+                stopTimer();
+                gameActive = true;
+                currentQueue = shuffleArray([...situations]);
+                currentIndex = 0;
+                score = 0;
+                timer = 30;
+                resetSelection();
+                disableControls(false);
+                updateUIStats();
+                feedbackEl.innerHTML = '';
+                loadSituation();
+            }
+
+            // ----- ЛОГИКА ВИКТОРИНЫ -----
+            function stopQuizTimer() {
+                if (quizTimerInterval) {
+                    clearInterval(quizTimerInterval);
+                    quizTimerInterval = null;
+                }
+            }
+
+            function startQuiz() {
+                quizQuestions = shuffleArray([...quizQuestionsData]);
+                quizIndex = 0;
+                quizScore = 0;
+                quizActive = true;
+                quizCompleted = false;
+                quizRestartBtn.style.display = 'none';
+                quizFeedbackEl.innerHTML = '';
+                quizTotalDisplayEl.textContent = quizQuestions.length;
+                quizScoreDisplayEl.textContent = '0';
+                loadQuizQuestion();
+                startQuizTimer();
+            }
+
+            function loadQuizQuestion() {
+                if (!quizActive || quizCompleted) return;
+                if (quizIndex >= quizQuestions.length) {
+                    finishQuiz();
+                    return;
+                }
+                const q = quizQuestions[quizIndex];
+                quizQuestionEl.textContent = q.question;
+                quizOptionsEl.innerHTML = '';
+                q.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'quiz-option-btn';
+                    btn.textContent = opt;
+                    btn.dataset.optionIndex = idx;
+                    btn.addEventListener('click', () => selectQuizAnswer(idx));
+                    quizOptionsEl.appendChild(btn);
+                });
+                quizFeedbackEl.innerHTML = '';
+                quizTimer = 15;
+                quizTimerDisplayEl.textContent = quizTimer;
+                quizScoreDisplayEl.textContent = quizScore;
+                enableQuizOptions(true);
+            }
+
+            function startQuizTimer() {
+                stopQuizTimer();
+                if (!quizActive || quizCompleted) return;
+                quizTimerInterval = setInterval(() => {
+                    quizTimer--;
+                    quizTimerDisplayEl.textContent = quizTimer;
+                    if (quizTimer <= 0) {
+                        stopQuizTimer();
+                        handleQuizTimeout();
+                    }
+                }, 1000);
+            }
+
+            function handleQuizTimeout() {
+                if (!quizActive || quizCompleted) return;
+                const q = quizQuestions[quizIndex];
+                quizFeedbackEl.innerHTML = `⏰ Время вышло! Правильный ответ: ${q.options[q.correct]}. ${q.explanation}`;
+                quizFeedbackEl.style.color = '#a13333';
+                quizFeedbackEl.style.background = '#ffe0e0';
+                enableQuizOptions(false);
+                highlightCorrectAnswer(q.correct);
+                moveToNextQuizQuestion(1800);
+            }
+
+            function selectQuizAnswer(selectedIdx) {
+                if (!quizActive || quizCompleted) return;
+                stopQuizTimer();
+                const q = quizQuestions[quizIndex];
+                const isCorrect = (selectedIdx === q.correct);
+                enableQuizOptions(false);
+                highlightCorrectAnswer(q.correct);
+                if (isCorrect) {
+                    quizScore++;
+                    quizFeedbackEl.innerHTML = `✅ Верно! ${q.explanation}`;
+                    quizFeedbackEl.style.color = '#2d5a27';
+                    quizFeedbackEl.style.background = '#e3f0da';
+                } else {
+                    quizFeedbackEl.innerHTML = `❌ Неверно. Правильный ответ: ${q.options[q.correct]}. ${q.explanation}`;
+                    quizFeedbackEl.style.color = '#a13333';
+                    quizFeedbackEl.style.background = '#ffe0e0';
+                }
+                quizScoreDisplayEl.textContent = quizScore;
+                moveToNextQuizQuestion(1500);
+            }
+
+            function highlightCorrectAnswer(correctIdx) {
+                const optionButtons = quizOptionsEl.querySelectorAll('.quiz-option-btn');
+                optionButtons.forEach((btn, idx) => {
+                    if (idx === correctIdx) {
+                        btn.classList.add('correct-answer');
+                    } else if (btn.dataset.optionIndex !== undefined && parseInt(btn.dataset.optionIndex) !== correctIdx && btn.classList.contains('wrong-answer') === false) {
+                        // не подсвечиваем неправильные, если не выбраны?
+                    }
+                });
+                // если был выбран неправильный, можно подсветить его красным (уже не нужно, т.к. блокировка)
+            }
+
+            function enableQuizOptions(enable) {
+                const buttons = quizOptionsEl.querySelectorAll('.quiz-option-btn');
+                buttons.forEach(btn => btn.disabled = !enable);
+            }
+
+            function moveToNextQuizQuestion(delay) {
+                setTimeout(() => {
+                    if (!quizActive || quizCompleted) return;
+                    quizIndex++;
+                    if (quizIndex >= quizQuestions.length) {
+                        finishQuiz();
+                    } else {
+                        loadQuizQuestion();
+                        startQuizTimer();
+                    }
+                }, delay);
+            }
+
+            function finishQuiz() {
+                quizActive = false;
+                quizCompleted = true;
+                stopQuizTimer();
+                showQuizResult();
+            }
+
+            function showQuizResult() {
+                quizQuestionEl.textContent = '🎓 Викторина завершена!';
+                quizOptionsEl.innerHTML = '';
+                quizFeedbackEl.innerHTML = `Вы ответили правильно на ${quizScore} из ${quizQuestions.length} вопросов.`;
+                quizFeedbackEl.style.color = '#2d5a27';
+                quizFeedbackEl.style.background = '#e3f0da';
+                quizTimerDisplayEl.textContent = '0';
+                quizRestartBtn.style.display = 'inline-block';
+                quizActive = false;
+                quizCompleted = true;
+            }
+
+            quizRestartBtn.addEventListener('click', () => {
+                startQuiz();
+            });
+
+            // ----- ОБРАБОТЧИКИ ИГРЫ -----
+            typeButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    if (!gameActive || timer <= 0 || this.disabled) return;
+                    typeButtons.forEach(b => b.classList.remove('active-type'));
+                    this.classList.add('active-type');
+                    selectedType = this.dataset.type;
+                });
+            });
+
+            decisionButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    if (!gameActive || timer <= 0 || this.disabled) return;
+                    processDecision(this.dataset.action);
+                });
+            });
+
+            restartBtn.addEventListener('click', resetGame);
+
+            // ----- СТАРТ ПРИ ЗАГРУЗКЕ -----
+            currentQueue = shuffleArray([...situations]);
+            currentIndex = 0;
+            score = 0;
+            gameActive = true;
+            updateUIStats();
+            loadSituation();
+            switchTab('game'); // активна игра по умолчанию
+        })();
+    </script>
+</body>
+</html>
